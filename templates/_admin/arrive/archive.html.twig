@@ -1,0 +1,137 @@
+{% block style %}
+<style>
+    .sw-theme-dots>ul.step-anchor>li.done>a:after {
+        background: green;
+    }
+    .sw-theme-dots>ul.step-anchor>li.active>a:after {
+        background: orangered;
+    }
+    .sw-theme-dots>ul.step-anchor>li>a:after {
+        background: grey;
+    }
+
+
+    /*progressbar*/
+#progressbar {
+	margin-bottom: 30px;
+	overflow: hidden;
+	/*CSS counters to number the steps*/
+	counter-reset: step;
+}
+#progressbar li {
+	list-style-type: none;
+	color: white;
+	text-transform: uppercase;
+	font-size: 9px;
+	width: 33.33%;
+	float: left;
+	position: relative;
+}
+#progressbar li:before {
+	content: counter(step);
+	counter-increment: step;
+	width: 20px;
+	line-height: 20px;
+	display: block;
+	font-size: 10px;
+	color: #333;
+	background: white;
+	border-radius: 3px;
+	margin: 0 auto 5px auto;
+}
+/*progressbar connectors*/
+#progressbar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: white;
+	position: absolute;
+	left: -50%;
+	top: 9px;
+	z-index: -1; /*put it behind the numbers*/
+}
+#progressbar li:first-child:after {
+	/*connector not needed before the first step*/
+	content: none;
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar li.active:before,  #progressbar li.active:after{
+	background: #27AE60;
+	color: white;
+}
+
+</style>
+{% endblock %}
+{% block page_content %}
+{% set new = menu.getRoute |slice(0, -8) %}
+
+    <div class="modal-header">
+        <h5 class="modal-title">ARCHIVE-{{ titre | upper  }}</h5>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <br>
+
+
+    <div class="modal-body">
+        {#{{ dump(data|length) }}#}
+
+        <h2>Liste des documents ajoutés</h2>
+        {% if data|length <= 0 %}
+
+            <div class="row">
+                <h1 align="center" style="color: red">Il n'y aucun document pour ce courrier</h1>
+
+            </div>
+        {% endif %}
+        {% for fichier in data %}
+       <div class="row">
+           <div class="col-md-8">
+               <div class="form-group">
+
+                   <input class="form-control titre" type="text" value="{{ fichier.alt | upper}}">
+               </div>
+           </div>
+           <div class="col-md-4">
+               <a class="btn btn-primary-gradient" target="_blank" href="{{ asset('uploads/courrier/' ~ fichier.alt) }}" download> <i class="fe fe-download"></i>
+                   <span style="font-weight: bolder;color: white">Télecharger</span></a>
+           </div>
+       </div>
+
+{% endfor %}
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+
+        {# <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>#}
+
+    </div>
+
+
+
+{% endblock %}
+{#{% include 'admin/macros/fichier.html.twig'  %}#}
+
+{% block javascripts %}
+
+
+    <script>
+        $('.titre').attr('readonly', true)
+        $(function () {
+            $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+        });
+       </script>
+{% endblock %}

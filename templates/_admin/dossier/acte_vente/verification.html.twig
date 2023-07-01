@@ -1,0 +1,162 @@
+{% block page_content %}
+
+{% form_theme form 'widget/fields-block.html.twig' %}
+
+{% from '_admin/macros/acte_vente.html.twig' import verifications %}
+ <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body form-card">
+                {{ form_start(form, {'attr': {'role':'form', 'class': 'form', 'id': route_without_prefix}}) }}
+                    <div id="prototype" data-prototype="{{ verifications(form.verifications.vars.prototype, 1)|e }}"></div>
+                    {{ include('_includes/ajax/response.html.twig') }}
+                     <h3 style="color: orangered">{{ current.libelleEtape }}</h3>
+                    <button type="button" class="add-document btn btn-sm btn-info mb-4" data-container=".doc-list">Ajouter une ligne</button>
+                        <div class="row">
+                           <div class="col-md-3"><span style="font-weight: bolder">Libelle</span> </div>
+                            <div class="col-md-4"><span style="font-weight: bolder">DEMANDE</span> </div>
+                            <div class="col-md-4"><span style="font-weight: bolder">REPONSE</span> </div>
+                            <div class="col-md-1">
+
+                            </div>
+                        </div>
+                     <br>
+                    <div class="doc-list">
+                    {% for document in form.verifications %}
+                        {{ verifications(document)}}
+                    {% endfor %}
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="text-right">
+                                {{ form_widget(form.save) }}
+                               {# {{ dump(form.next) }}#}
+                               {% if form.next is defined %}
+                                {{ form_widget(form.next) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(function () {
+            init_select2(null, null, '.form-card');
+
+            
+            $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+            const $container = $('.doc-list');
+            var index = $container.find('.row-container').length;
+
+            const $addLink = $('.add-document');
+            $addLink.click(function(e) {
+               
+                addLine($container);
+
+                //addDeleteLink($container);
+            
+                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+            });
+            // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+            /*if (index == 0) {
+            addimputation($container);
+            } else {*/
+            if (index > 0) {
+                $container.children('.row-container').each(function() {
+                    const $this = $(this);
+                    addDeleteLink($this);
+                    $this.find("select").each(function() {
+                        const $this = $(this);
+                        init_select2($this, null, '.form-card'); 
+                    });
+
+
+                    $this.find('.no-auto').each(function () {
+                        const $this = $(this);
+                        const $id = $('#' + $this.attr('id'));
+                        init_date_picker($id,  'down', (start, e) => {
+                            //$this.val(start.format('DD/MM/YYYY'));
+                        }, null, null, false);
+
+                        $id.on('apply.daterangepicker', function (ev, picker) {
+                            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                        });
+                    });
+                   
+                });
+            }
+
+
+            // La fonction qui ajoute un formulaire Categorie
+            function addLine($container) {
+                // Dans le contenu de l'attribut « data-prototype », on remplace :
+                // - le texte "__name__label__" qu'il contient par le label du champ
+                // - le texte "__name__" qu'il contient par le numéro du champ
+                var $prototype = $($("#prototype").attr('data-prototype').replace(/__name__label__/g, 'Pièce ' + (index + 1)).replace(/__name__/g, index));
+                // On ajoute au prototype un lien pour pouvoir supprimer la prestation
+                addDeleteLink($prototype);
+                // On ajoute le prototype modifié à la fin de la balise <div>
+                $container.append($prototype);
+               
+                $prototype.find("select").each(function() {
+                   const $this = $(this);
+                   init_select2($this, null, '.form-card'); 
+                });
+
+
+                $prototype.find('.no-auto').each(function () {
+                    const $this = $(this);
+                    const $id = $('#' + $this.attr('id'));
+                    init_date_picker($id,  'down', (start, e) => {
+                        //$this.val(start.format('DD/MM/YYYY'));
+                    }, null, null, false);
+
+                    $id.on('apply.daterangepicker', function (ev, picker) {
+                        $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                    });
+                });
+
+                
+
+                
+                index++;
+            }
+
+
+            function addDeleteLink($prototype) {
+                // Création du lien
+                $deleteLink = $('<a href="#" class="btn btn-danger"><span class="fa fa-trash"></span></a>');
+                // Ajout du lien
+                $prototype.find(".del-col").append($deleteLink);
+                // Ajout du listener sur le clic du lien
+                $deleteLink.click(function(e) {
+                    const $parent = $(this).closest('.row-container');
+                    $parent.remove();
+
+                    
+                    if (index > 0) {
+                        index -= 1;
+                    }
+
+                    e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                });
+            }
+        });
+        
+    </script>
+{% endblock %}

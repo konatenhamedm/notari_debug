@@ -1,0 +1,75 @@
+<div id="step-2" class=" ">
+    <h2 class="libelleVide2">Veillez s'il vous plaît terminer les/l étape(s) précédente(s)</h2>
+
+    <div class="step-22">
+
+        <div class="panel panel-primary">
+            <div class="tab-menu-heading">
+                <div class="tabs-menu">
+                    <!-- Tabs -->
+                    <ul class="nav panel-tabs">
+                        <li><a href="#tab1" class="active" data-bs-toggle="tab">Pièces de l'acheteur</a></li>
+                        <li><a href="#tab2" data-bs-toggle="tab" class="">Pièces du vendeur</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body tabs-menu-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
+                                                           <span class="col-lg-12 groupe" id="groupe"
+                                                                 data-prototype="{{ piece(form.pieces.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>PIECES l'ACHETEUR </h4>
+                                <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_groupe" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter une
+                                        pièce </a>
+                                </div>
+                                {% for row in form.pieces %}
+                                    <span class="container col-md-12">
+                                        {{ piece(row|e) }}
+
+                                    </span>
+                                {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+                    </div>
+                    <div class="tab-pane" id="tab2">
+                                                             <span class="col-lg-12 pieceVendeur" id="pieceVendeur"
+                                                                   data-prototype="{{ pieceVendeur(form.pieceVendeurs.vars.prototype)|e('html_attr') }}">
+
+                                                                                              <h4>PIECES VENDEUR</h4>
+                                                                                            <div class="col-md-12">
+                                                                                                <a href="#" class="btn btn-secondary add_pieceVendeur" style="margin-left: -20px"
+                                                                                                   data-card-tool="remove"
+                                                                                                   data-toggle="tooltip" data-placement="top" title=""
+                                                                                                   data-original-title="Remove Card">Ajouter une
+                                                                                                    pièce </a>
+                                                                                            </div>
+                                                                                            {% for row in form.pieceVendeurs %}
+                                                                                                <span class="container col-md-12">
+                                                                                                    {{ pieceVendeur(row|e) }}
+
+                                                                                                </span>
+                                                                                            {% endfor %}
+                                                                                 <input class="after" type="hidden"/>
+                                                                                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {# {% if piece_nombre == 2 and dossier.etape == "Recueil des pièces"%}#}
+        {#   <div class="row">
+               <div class="col-md-4"><a class="btn btn-default pd-x-2" style="" id="piece_valider"
+                   >Finir</a></div>
+               <div class="col-md-8"></div>
+           </div>#}
+        {#{% endif %}#}
+    </div>
+
+</div>

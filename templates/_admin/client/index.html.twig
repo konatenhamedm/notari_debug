@@ -1,0 +1,83 @@
+{% extends '_admin/_includes/index.html.twig' %}
+
+{% block titre %}{{ menu.getRoute }}{% endblock %}
+
+{% block page_content %}
+
+    {% set new = menu.getRoute %}
+    <!-- PAGE-HEADER -->
+    <div class="page-header" style="margin-top:-0.1rem">
+        <h1 class="page-title">{{ "Client" |capitalize }}</h1>
+        <div>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('client') }}">LISTE DES CLIENTS</a></li>
+                {#<li class="breadcrumb-item active" aria-current="page">{{ "LISTE ACTES DE VENTE" | capitalize }}</li>#}
+            </ol>
+        </div>
+
+    </div>
+    <!-- PAGE-HEADER END -->
+    <!-- Row -->
+    <div class="row row-sm" style="margin-top:-1rem">
+
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-header">
+                   <div class="col-md-8">
+                        <h3 class="card-title">{{ titre | capitalize }}</h3>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="btn-group offset-8">
+                        <div class="float-end">
+                          <a class="btn btn-secondary bg-secondary-gradient"  href="{{ path('client_new') }}">
+                                <i class="fe fe-plus"></i>Nouveau
+                            </a>
+                            <a class="btn btn-secondary bg-success-gradient offset-7"  href="{{ path('client_addFile_new') }}" data-bs-toggle="modal" data-bs-target="#extralargemodal">
+                                <i class="fe fe-download"></i>Upload
+                            </a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tab-menu-heading">
+                        <div class="tabs-menu">
+                            <!-- Tabs -->
+                            <ul class="nav panel-tabs panel-secondary" id="tab-client">
+                                {% for index, type in types %}
+                                    
+                                    <li class="nav-item">
+                                        <a class="nav-link {% if loop.index == 0 %}active{% endif %}" data-method="POST" data-bs-toggle="tab" href="#{{ type.id }}" data-href="{{ type.url }}">
+                                            <span class="nav-text">{{ type.label }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="panel-body tabs-menu-body">
+                        <div class="tab-content">
+                            {% for index, type in types %}
+                                <div class="tab-pane fade {% if loop.index == 0 %}active show{% endif %}" id="{{ type.id }}" role="tabpanel" aria-labelledby="{{ type.id }}"></div>
+                            {% endfor %}
+                         </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+ <script src="{{ asset('assets/js/tab-load.js') }}"></script>
+<script>
+    	$(document).ready(function () {
+			load_tab('tab-client');
+        });
+</script>
+
+{% endblock %}
+
+

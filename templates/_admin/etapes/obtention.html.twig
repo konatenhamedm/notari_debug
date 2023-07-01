@@ -1,0 +1,28 @@
+<div id="step-6"
+     class="">
+
+    <h2 class="libelleVide6">Veillez s'il vous plaît terminer les/l étape(s) précédente(s)</h2>
+
+    <div class="step-66">
+                                         <span class="col-lg-12 identification" id="identification"
+                                               data-prototype="{{ obtention(form.obtentions.vars.prototype)|e('html_attr') }}">
+
+                                  <h3>Obtention du titre de propriéte</h3>
+                                {#<div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_enregistrement" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter une
+                                        document </a>
+                                </div>#}
+                                             {% for row in form.obtentions %}
+                                                 <span class="container col-md-12">
+                                        {{ obtention(row|e) }}
+
+                                    </span>
+                                             {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+
+    </div>
+</div>

@@ -1,0 +1,45 @@
+framework:
+    workflows:
+        dossier:
+            type: 'workflow' # or 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'etat'            
+            supports: 
+                - App\Entity\Dossier
+            initial_marking: cree
+            places:
+                - cree
+                - en_cours
+                - termine
+            transitions:
+                post_creation:
+                    from: cree
+                    to: en_cours
+                cloture:
+                    from: en_cours
+                    to: termine
+
+        courrier:
+            type: 'workflow' # or 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'etat'
+            supports:
+                - App\Entity\CourierArrive
+            initial_marking: cree
+            places:
+                - cree
+                - en_cours
+                - termine
+            transitions:
+                post_creation:
+                    from: cree
+                    to: en_cours
+                cloture:
+                    from: en_cours
+                    to: termine

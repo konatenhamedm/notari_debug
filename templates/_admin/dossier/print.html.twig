@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Suivi Acte de ventes</title>
+  <style>
+  {% block page_css %}
+  @page {
+
+  margin-footer: 0.5cm;
+    
+
+  header: html_headerContent;
+  footer: html_pageFooter;
+  margin-top: 3.5cm;
+  /*background: ...
+  background-image: ...
+  background-position ...
+  background-repeat ...
+  background-color ...
+  background-gradient: ...*/
+}
+  {% endblock %}
+
+  .clearfix:before, .clearfix:after {
+  content: " ";
+  display: table; }
+
+.clearfix:after {
+  clear: both; }
+
+
+/*@page :first {
+   header: html_headerContent;
+}*/
+
+  .table {
+  width: 100%;
+  max-width: 100%;
+
+}
+.table {page-break-before:auto;}
+
+body { font-family: Trebuchet, Arial,Helvetica,DejaVu Sans; }
+
+.table th,
+.table td {
+  padding: 2px;
+  vertical-align: top;
+  border-top: 1px solid #191919;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 1px solid #191919;
+}
+
+.table tbody + tbody {
+  border-top: 1px solid #191919;
+}
+
+.table .table {
+  background-color: #fff;
+}
+
+.table-sm th,
+.table-sm td {
+  padding: 0.3rem;
+}
+
+.table-bordered {
+  border: 1px solid #191919;
+}
+
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid #191919;
+}
+
+.table-bordered thead th,
+.table-bordered thead td {
+  border-bottom-width: 1;
+}
+
+
+
+@media all {
+    /*.content { display: block; page-break-inside: avoid; }*/
+}
+
+.content {
+  /*margin-top: 18cm;*/
+}
+
+.table-responsive.table-bordered {
+  border: 0;
+}</style>
+</head>
+<body style="font-size:11px;">
+   
+     <htmlpageheader name="headerContent">
+        <table style="width:100%">
+            <tr>
+                <td style="width:50%;vertical-align:top;">
+                    <h1 style="margin-bottom:2px;font-size:18px;">NOTARI</h1>
+                  
+                </td>
+                <td style="width:50%;text-align:right;vertical-align:top">
+                    <h1 style="margin-bottom:2px;font-size:18px;">SUIVI ACTES DE VENTES</h1>
+                    <span>Date du {{ 'now' | date('d/m/Y') }}
+                </td>
+            </tr>
+        </table>
+    </htmlpageheader>
+    <div style="margin-top:2px;"></div>
+    <table class="table table-bordered" style="border-collapse:collapse;font-size:8px;text-align:left;">
+        <thead style="">
+            <tr>
+                <th style="vertical-align:middle;width:8%;text-align:center;background-color:#f5f5f5;">Numéro</th>
+                <th style="vertical-align:middle;width:8%;text-align:center;background-color:#f5f5f5;">Date cr.</th>
+                <th style="vertical-align:middletext-align:center;background-color:#f5f5f5;">Objet</th>
+                <th style="vertical-align:middletext-align:center;background-color:#f5f5f5;">Etape</th>
+                <th style="vertical-align:middle;width:8%;text-align:center;background-color:#f5f5f5;">Date de debut</th>
+                <th style="vertical-align:middle;width:8%;text-align:center;background-color:#f5f5f5;">Date de fin prévue</th>
+                <th style="vertical-align:middle;width:8%;text-align:center;background-color:#f5f5f5;">Date de fin</th>
+                
+                <th style="vertical-align:middle;width:5%;text-align:center;background-color:#f5f5f5;">Nbr. J.</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for dossier in dossiers %}
+            <tr>
+              <td style="vertical-align:middle;text-align:center;">
+                {{ dossier.numero_ouverture  }}
+              </td>
+                <td style="vertical-align:middle;text-align:center;">
+                {{ dossier.date_creation|date('d/m/Y') }}
+              </td>
+                <td style="vertical-align:middle;">
+                {{ dossier.objet  }}
+              </td>
+               <td style="vertical-align:middle;">
+                {{ dossier.libelle_etape  }}
+              </td>
+                <td style="vertical-align:middle;text-align:center;">
+                {{ dossier.date_debut_etape ? dossier.date_debut_etape|date('d/m/Y'): ''  }}
+              </td>
+                <td style="vertical-align:middle;text-align:center;">
+                {{ dossier.date_fin_prevue|date('d/m/Y')  }}
+              </td>
+                <td style="vertical-align:middle;text-align:center;">
+                {{ dossier.date_fin_actuelle ? dossier.date_fin_actuelle|date('d/m/Y'): ''  }}
+              </td>
+              <td style="vertical-align:middle;text-align:center;">
+                &nbsp;
+              </td>
+               
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+     <htmlpagefooter name="pageFooter">
+        <table style="width:100%;style:font-style:italic">
+            <tr>
+                <td style="width:50%;text-align:left"><i>NOTARI  | Page {PAGENO}/{nbpg}</i></td>
+                <td style="width:50%;text-align:right;">              
+                    <i>Tirage du : {{ 'now' | date('d/m/Y H:i:s') }}</i>
+                </td>
+            </tr>
+        </table>
+    </htmlpagefooter>
+    
+</body>
+</html>

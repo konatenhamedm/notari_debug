@@ -1,0 +1,35 @@
+<div id="step-3"
+     class="" >
+
+    <h2 class="libelleVide3">Veillez s'il vous plaît terminer les/l étape(s) précédente(s)</h2>
+
+    <div  class="step-33" >
+                                         <span class="col-lg-12 identification" id="identification"
+                                               data-prototype="{{ redaction(form.redactions.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>Enregistrements</h4>
+                               {# <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_identification" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter une
+                                        document </a>
+                                </div>#}
+                                {% for row in form.redactions %}
+                                    <span class="container col-md-12">
+                                        {{ redaction(row|e) }}
+
+                                    </span>
+                                {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+
+        {# {% if document_nombre > 0 and dossier.etape == "Signature"%}#}
+        {#  <div class="row" {% if dossier.etape == "Retrait titre de propriété" %} style="display: none" {% endif %}>
+              <div class="col-md-4"><a class="btn btn-default pd-x-25" style="" id="enr"
+                  >Finir</a></div>
+              <div class="col-md-8"></div>
+          </div>#}
+        {# {% endif %}#}
+    </div>
+</div>

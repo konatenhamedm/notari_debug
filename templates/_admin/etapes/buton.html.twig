@@ -1,0 +1,14 @@
+<a href="{{ path('dossierActeVente') }}" class="btn btn-secondary yello">Fermer</a>
+{# <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>#}
+<button class="btn btn-primary btn-ajax" >Valider</button>
+{% if dossier.etape == "Identification du client"%}
+    <a  class="btn btn-default pd-x-25" id="ident" style=""
+    >Valider l'étape</a>
+{% endif %}
+<a class="btn btn-default pd-x-25" style="" id="enr">Valider l'étape</a>
+<a class="btn btn-default pd-x-2" style="" id="signer">Valider l'étape</a>
+<a class="btn btn-default pd-x-2" style="" id="piece_valider">Valider l'étape</a>
+<a class="btn btn-default pd-x-2" style="" id="redaction_valider">Valider l'étape</a>
+<a class="btn btn-default pd-x-2" style="" id="obtention_valider">Valider l'étape</a>
+<a class="btn btn-default pd-x-2" style="" id="remise_valider">Valider l'étape</a>
+<a class="btn btn-default pd-x-2" style="" id="classification_valider">Valider l'étape</a>

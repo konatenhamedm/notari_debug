@@ -1,0 +1,35 @@
+<div id="step-7"
+     class="" >
+
+    <h2 class="libelleVide7">Veillez s'il vous plaît terminer les/l étape(s) précédente(s)</h2>
+
+    <div  class="step-77" >
+                                         <span class="col-lg-12 identification" id="identification"
+                                               data-prototype="{{ remise(form.remises.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>Remise titre de propriété à l'acheteur</h4>
+                              {#  <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_enregistrement" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter une
+                                        document </a>
+                                </div>#}
+                                {% for row in form.remises %}
+                                    <span class="container col-md-12">
+                                        {{ remise(row|e) }}
+
+                                    </span>
+                                {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+
+        {# {% if document_nombre > 0 and dossier.etape == "Signature"%}#}
+        {#  <div class="row" {% if dossier.etape == "Retrait titre de propriété" %} style="display: none" {% endif %}>
+              <div class="col-md-4"><a class="btn btn-default pd-x-25" style="" id="enr"
+                  >Finir</a></div>
+              <div class="col-md-8"></div>
+          </div>#}
+        {# {% endif %}#}
+    </div>
+</div>

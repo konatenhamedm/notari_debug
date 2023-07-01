@@ -1,0 +1,227 @@
+{% from '_admin/macros/fichier.html.twig' import list_document %}
+{% block page_content %}
+    {# {% form_theme form 'widget/fields-block.html.twig' %}#}
+    <div class="modal-header bg-secondary-gradient">
+        <h2 class="modal-title" style="margin-top: -15px;color: white">EDITION-{{ titre | upper  }}
+        </h2>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    {% form_theme form 'widget/fields-block.html.twig' %}
+    {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
+    <div class="modal-body">
+        {# {{ include('includes/ajax/response.html.twig') }} #}
+        <div id="list-document" data-prototype="{{ list_document(form.documentCourriers.vars.prototype, 1)|e }}"></div>
+
+        <div class="contenu" style="margin-top: -10px">
+            <div class="row">
+                <div class="form-group col-md-6 ">
+                    <label class="sr-onl" for="userinput1">Date de réception</label>
+                    {{ form_widget(form.dateReception,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'NOM','required':'required'}}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="sr-onl" for="userinput1">N d'enregistrement</label>
+                    {{ form_widget(form.numero,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Numero'}}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <label class="sr-onl" for="userinput1">Rangement</label>
+                    {{ form_widget(form.rangement,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'rangement'}}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <label class="sr-onl" for="userinput1">Objet</label>
+                    {{ form_widget(form.objet,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Objet','required':'required'}}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+            </div>
+
+            <div >
+                <div class="row">
+                    <div class="form-group col-md-6 ">
+                        <label class="sr-onl" for="userinput1">Expéditeur</label>
+                        {{ form_widget(form.expediteur,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Expéditeur'}}) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="form-group col-md-6 arrive">
+                        <label class="sr-onl" for="userinput1">Réceptionné par</label>
+                        {{ form_widget(form.user,{'attr':{'class':'form-select form-control border-primary','id':'userinput1','placeholder':'Réceptionné par'}}) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="form-group col-md-6 autre">
+                        <label class="sr-onl" for="userinput1">Réceptionné par</label>
+                        {{ form_widget(form.recep,{'attr':{'class':'form-select form-control border-primary','id':'userinput1','placeholder':'Réceptionné par'}}) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" data-origine="1" class="add-document btn btn-sm btn-info" data-container=".doc-container">Ajouter un document</button>
+                <br/>
+                <div class="doc-container">
+                    <br/>
+                    {% for document in form.documentCourriers %}
+                        {{ list_document(document) }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn btn-primary btn-ajax">Valider</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+{#{% include 'admin/macros/fichier.html.twig'  %}#}
+
+{% block javascripts %}
+    <script>
+
+        $(function () {
+            const $container = $('.doc-container');
+            var index = $container.find('.row-line').length;
+
+            const $addLink = $('.add-document');
+            $addLink.click(function(e) {
+
+                addLine($container);
+
+
+
+                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+            });
+            // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+            /*if (index == 0) {
+            addimputation($container);
+            } else {*/
+            if (index > 0) {
+                $container.children('.row-line').each(function() {
+                    const $this = $(this);
+                    addDeleteLink($this);
+                    $this.find("select").each(function() {
+                        const $this = $(this);
+                        init_select2($this, null);
+                    });
+
+
+
+
+                });
+            }
+
+
+            // La fonction qui ajoute un formulaire Categorie
+            function addLine($container) {
+                // Dans le contenu de l'attribut « data-prototype », on remplace :
+                // - le texte "__name__label__" qu'il contient par le label du champ
+                // - le texte "__name__" qu'il contient par le numéro du champ
+                var $prototype = $($("#list-document").attr('data-prototype').replace(/__name__label__/g, 'Pièce ' + (index + 1)).replace(/__name__/g, index));
+                // On ajoute au prototype un lien pour pouvoir supprimer la prestation
+                addDeleteLink($prototype);
+                // On ajoute le prototype modifié à la fin de la balise <div>
+                $container.append($prototype);
+
+                $prototype.find("select").each(function() {
+                    const $this = $(this);
+                    init_select2($this, null);
+                });
+
+                index++;
+            }
+
+
+            function addDeleteLink($prototype) {
+                // Création du lien
+                $deleteLink = $('<a href="#" class="btn btn-danger"><span class="fa fa-trash"></span></a>');
+                // Ajout du lien
+                $prototype.find(".del-col").append($deleteLink);
+                // Ajout du listener sur le clic du lien
+                $deleteLink.click(function(e) {
+                    const $parent = $(this).closest('.row-line');
+                    $parent.remove();
+
+
+                    if (index > 0) {
+                        index -= 1;
+                    }
+
+                    e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                });
+            }
+        });
+
+        $(function () {
+            $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+        });
+        $(document).ready(function () {
+            $('#courier_arrive_etat').hide();
+
+            $('.autre').hide();
+            var check = $(".checkbox").get(0).checked;
+
+
+            if (check === true) {
+                $('#principal .mot').html('Décochez cette option pour une numérotation personnalisée');
+                $('#courier_arrive_numero').attr('readonly', true)
+            }else {
+                $('#principal .mot').html('Cochez cette option pour une numérotation automatque');
+            }
+
+            $(".checkbox").change(function (e) {
+                const $this = $(this);
+                var mot = $('#principal #p2 .mot')
+
+
+                var res = this.closest('.card-body');
+                if (this.checked) {
+                    $.ajax({
+                        url: '/admin/existe',
+                        type: 'get',
+                        dataType: 'json',
+                        success: function (response, status) {
+                            $('#principal .mot').html('Décochez cette option pour une numérotation personnalisée');
+                            $('#courier_arrive_numero').val(response.nom)
+                            $('#courier_arrive_numero').attr('readonly', true)
+                            //console.log(response.nom);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+                if (this.checked === false) {
+                    $('#courier_arrive_numero').val('')
+                    $('#principal .mot').html('Cochez cette option pour une numérotation automatique');
+                    $('#courier_arrive_numero').attr('readonly', false)
+                }
+            });
+        })
+
+
+    </script>
+{% endblock %}

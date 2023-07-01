@@ -1,0 +1,173 @@
+{% block style %}
+<style>
+    .sw-theme-dots>ul.step-anchor>li.done>a:after {
+        background: green;
+    }
+    .sw-theme-dots>ul.step-anchor>li.active>a:after {
+        background: orangered;
+    }
+    .sw-theme-dots>ul.step-anchor>li>a:after {
+        background: grey;
+    }
+
+
+    /*progressbar*/
+#progressbar {
+	margin-bottom: 30px;
+	overflow: hidden;
+	/*CSS counters to number the steps*/
+	counter-reset: step;
+}
+#progressbar li {
+	list-style-type: none;
+	color: white;
+	text-transform: uppercase;
+	font-size: 9px;
+	width: 33.33%;
+	float: left;
+	position: relative;
+}
+#progressbar li:before {
+	content: counter(step);
+	counter-increment: step;
+	width: 20px;
+	line-height: 20px;
+	display: block;
+	font-size: 10px;
+	color: #333;
+	background: white;
+	border-radius: 3px;
+	margin: 0 auto 5px auto;
+}
+/*progressbar connectors*/
+#progressbar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: white;
+	position: absolute;
+	left: -50%;
+	top: 9px;
+	z-index: -1; /*put it behind the numbers*/
+}
+#progressbar li:first-child:after {
+	/*connector not needed before the first step*/
+	content: none; 
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar li.active:before,  #progressbar li.active:after{
+	background: #27AE60;
+	color: white;
+}
+
+</style>
+{% endblock %}
+{% block page_content %}
+
+    <div class="modal-header">
+        <h5 class="modal-title">SUIVI DOSSIER-{{ dossier.objet | upper }}</h5>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+  
+    <div class="modal-body" data-url="{{ base_url }}" data-reload="true">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="smartwizard-3" class="sw-main sw-theme-dots">
+                            <ul class="nav nav-tabs step-anchor">
+                            {% for etape in etapes %}
+                                {#{{ dump(etape.numeroEtape) }}#}
+                                {% set _index = loop.index %}
+                                {% if etape.propriete != 'infoClassification' %}
+                                    {% set has_value = attribute(dossier, 'get' ~ (etape.propriete|title))|length %}
+                                {% else %}
+                                    {% set has_value = attribute(dossier, 'get' ~ (etape.propriete|title))['id']|default(0) %}
+                                {% endif %}
+                                {% set is_done = (_index == 1 or has_value) %}
+                                {% set is_current = (etape.route == dossier.etape) %}
+                                <li class="nav-item li-step {% if has_value %}has-value{% endif %}  {% if (etape.route == dossier.etape) or (dossier.etape == '' and _index == 1) %}active{% endif %} {% if _index == 1 and not has_value %}active{% endif %} {% if has_value %}done{% endif %}">
+                                    <a href="#{{ etape.route }}" data-numero="{{ etape.numeroEtape }}" class="nav-link" title="{{ etape.libelleEtape }}" {% if is_done or is_current %}data-href="{{ path(type_acte.code ~ '_' ~ etape.route, {id:  dossier.id}) }}"{% endif %}>
+                                        {{ _index }}
+                                        <span class="sr-only">{{ etape.libelleEtape }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                            </ul>
+	                    </div>
+                        <div id="form-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal" >Retourner à la grille</button>
+    </div>
+   
+
+{% endblock %}
+{#{% include 'admin/macros/fichier.html.twig'  %}#}
+{% block javascripts %}
+    <script>
+        $(function () {
+            function load_content(url) {
+                const $form_content = $('#form-content');
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () {
+                        $form_content.html(`<div class="d-flex align-items-center">
+  <strong>Chargement des données de l'étape</strong>
+  <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+</div>`);
+                    },
+                    success: function (html) {
+                        
+                        $form_content.html(html);
+                    },
+                   
+                    error: function () {
+                        $form_content.html('<div class="text-center text-danger">Une erreur est survenue...</div>');
+                    }
+                })
+            }
+
+            $('#smartwizard-3').on('click', '.nav-link', function (e) {
+                e.preventDefault();
+                const $this = $(this);
+                if ($this.attr('data-href')) {
+                    load_content($this.attr('data-href'));
+                    const $parent = $this.closest('li');
+                    $parent.removeClass('done is-current').addClass('active');
+                  
+                    $('.li-step').not($parent).each(function () {
+                        const $_this = $(this);
+                        $_this.removeClass('done active is-current');
+                        if ($_this.hasClass('has-value')) {
+                            $_this.addClass('done');
+                        } else {
+
+                        }
+
+
+                        if ($_this.find('a').attr('data-href') && !$_this.hasClass('has-value')) {
+                            if (!$_this.hasClass('is-current')) {
+                                $_this.addClass('is-current');
+                            }
+                            
+                        }
+                    });
+
+                }
+            });
+
+            
+            load_content($('.li-step.active').first().find('a').attr('data-href'));
+        });
+    </script>
+{% endblock %}

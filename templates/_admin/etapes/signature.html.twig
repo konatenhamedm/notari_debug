@@ -1,0 +1,35 @@
+<div id="step-4"
+     class="" >
+
+    <h2 class="libelleVide4">Veillez s'il vous plaît terminer les/l étape(s) précédente(s)</h2>
+
+    <div  class="step-44" >
+                                         <span class="col-lg-12 document" id="document"
+                                               data-prototype="{{ document(form.documentSignes.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>Document signés</h4>
+                                <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_document" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter un
+                                        document </a>
+                                </div>
+                                {% for row in form.documentSignes %}
+                                    <span class="container col-md-12">
+                                        {{ document(row|e) }}
+
+                                    </span>
+                                {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+
+        {# {% if document_nombre > 0 and dossier.etape == "Signature"%}#}
+        {#  <div class="row" {% if dossier.etape == "Enregistrement" %} style="display: none" {% endif %}>
+              <div class="col-md-4"><a class="btn btn-default pd-x-2" style="" id="signer"
+                  >Finir</a></div>
+              <div class="col-md-8"></div>
+          </div>#}
+        {# {% endif %}#}
+    </div>
+</div>

@@ -1,0 +1,174 @@
+{% block page_content %}
+
+{% form_theme form 'widget/fields-block.html.twig' %}
+
+{% from '_admin/macros/acte_vente.html.twig' import list_piece %}
+ <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body form-card">
+                {{ form_start(form, {'attr': {'role':'form', 'class': 'form', 'id': route_without_prefix}}) }}
+                    <div id="list-piece" data-prototype="{{ list_piece(form.pieces.vars.prototype, 1)|e }}"></div>
+                    {{ include('_includes/ajax/response.html.twig') }}
+                    <h3 style="color: orangered">{{ current.libelleEtape }}</h3>
+                    <div class="panel panel-primary">
+                        <div class="tab-menu-heading">
+                            <div class="tabs-menu">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="acheteur-tab" data-bs-toggle="tab" data-bs-target="#acheteur" type="button" role="tab" aria-controls="home" aria-selected="true">Acheteur</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="vendeur-tab" data-bs-toggle="tab" data-bs-target="#vendeur" type="button" role="tab" aria-controls="profile" aria-selected="false">Vendeur</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="panel-body tabs-menu-body">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="acheteur" role="tabpanel" aria-labelledby="acheteur-tab">
+                                    <div>{% if acheteur.typeClient.code == 'P' %}Nom/Prénoms{% else %}Raison Sociale{% endif %}: <strong>{{ acheteur.identite }}</strong></div>
+                                    <button type="button" data-origine="1" class="add-piece btn btn-sm btn-info" data-container=".acheteur-container">Ajouter une pièce</button>
+                                    <div class="acheteur-container">
+                                        {% for piece in form.pieces|filter(v => v.vars.value.origine == 1) %}
+                                            {{ list_piece(piece)}}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="vendeur" role="tabpanel" aria-labelledby="vendeur-tab">
+                                    <div>{% if vendeur.typeClient.code == 'P' %}Nom/Prénoms{% else %}Raison Sociale{% endif %}: <strong>{{ vendeur.identite }}</strong></div>
+                                    <button type="button" data-origine="2" class="add-piece btn btn-sm btn-info" data-container=".vendeur-container">Ajouter une pièce</button>
+                                    <div class="vendeur-container">
+                                        {% for piece in form.pieces|filter(v => v.vars.value.origine == 2) %}
+                                            {{ list_piece(piece)}}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="text-right">
+                                {{ form_widget(form.save) }}
+                                {% if form.next is defined %}
+                                {{ form_widget(form.next) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_widget(form._token) }}
+                {{ form_end(form, {render_rest: false}) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            init_select2(null, null, '.form-card');
+            $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+
+           
+            var index = $('.panel-body').find('.row-line').length;
+
+            const $addLink = $('.add-piece');
+            $addLink.click(function(e) {
+                const $container = $($(this).attr('data-container'));
+                addLine($container, $(this).attr('data-origine'));
+
+                //addDeleteLink($container);
+            
+                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+            });
+            // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+            /*if (index == 0) {
+            addimputation($container);
+            } else {*/
+            if (index > 0) {
+               
+                $('.panel-body').find('.row-line').each(function() {
+                    const $this = $(this);
+                    addDeleteLink($this);
+                    $this.find("select").each(function() {
+                        const $this = $(this);
+                        init_select2($this, null, '.form-card'); 
+                    });
+                   
+                });
+            }
+
+
+            // La fonction qui ajoute un formulaire Categorie
+            function addLine($container, origine) {
+                // Dans le contenu de l'attribut « data-prototype », on remplace :
+                // - le texte "__name__label__" qu'il contient par le label du champ
+                // - le texte "__name__" qu'il contient par le numéro du champ
+                var $prototype = $($("#list-piece").attr('data-prototype').replace(/__name__label__/g, 'Pièce ' + (index + 1)).replace(/__name__/g, index));
+
+                $prototype.find('.del-col').removeClass('no-action');
+                $prototype.find('.lib-document').prop('readonly', false);
+                $prototype.find('.ck-client').prop('checked', false);
+                // On ajoute au prototype un lien pour pouvoir supprimer la prestation
+                addDeleteLink($prototype);
+                // On ajoute le prototype modifié à la fin de la balise <div>
+                $container.append($prototype);
+                $prototype.find('.origine').val(origine);
+                $prototype.find("select").each(function() {
+                   const $this = $(this);
+                   init_select2($this, null, '.form-card'); 
+                });
+
+
+                $prototype.find('.no-auto').each(function () {
+                    const $this = $(this);
+                    const $id = $('#' + $this.attr('id'));
+                    init_date_picker($id,  'down', (start, e) => {
+                        //$this.val(start.format('DD/MM/YYYY'));
+                    }, null, null, false);
+
+                    $id.on('apply.daterangepicker', function (ev, picker) {
+                        $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                    });
+                });
+
+            
+
+                
+                index++;
+            }
+
+
+            function addDeleteLink($prototype) {
+                // Création du lien
+                $deleteLink = $('<a href="#" class="btn btn-danger"><span class="fa fa-trash"></span></a>');
+                // Ajout du lien
+                $prototype.find(".del-col").not('.no-action').append($deleteLink);
+                // Ajout du listener sur le clic du lien
+                $deleteLink.click(function(e) {
+                    const $parent = $(this).closest('.row-line');
+                    $parent.remove();
+
+                    
+                    if (index > 0) {
+                        index -= 1;
+                    }
+
+                    e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                });
+            }
+        });
+       
+    </script>
+{% endblock %}

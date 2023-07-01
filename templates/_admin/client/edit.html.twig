@@ -1,0 +1,625 @@
+{% extends '_admin/_includes/index.html.twig' %}
+
+{% block titre %}NOUVEAU CLIENT{% endblock %}
+{% from '_admin/macros/client.html.twig' import list_document %}
+{% block page_content %}
+    {% set new = menu.getRoute %}
+    <div class="page-header">
+        <h1 class="page-title">{{ "Client" |capitalize }}</h1>
+        <div>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('client') }}">LISTE DES CLIENTS </a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ "MODIFICATION CLIENT" | capitalize }}</li>
+            </ol>
+        </div>
+
+    </div>
+     {% form_theme form 'widget/fields-block.html.twig' %}
+            {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">MODIFICATION CLIENT</h3>
+        </div>
+        <div class="card-body">
+           
+            <div id="list-document" data-prototype="{{ list_document(form.documents.vars.prototype, 1)|e }}"></div>
+           
+             <div class="row">
+                <div class="col-md-12">
+                    {{ include('_includes/ajax/response.html.twig') }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 ">
+                    {{ form_row(form.type_client) }}
+                </div>
+            </div>
+            {#DEbut physique#}
+        <div class="physique">
+            <div class="row">
+                <div class="col-md-4">
+                     {{ form_row(form.nom) }}
+                </div>
+                <div class="col-md-4 ">
+                    {{ form_row(form.prenom) }}
+                </div>
+                <div class="col-md-4">
+                   {{ form_row(form.photo) }}
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4 ">
+                    {{ form_row(form.dateNaissance)}}
+                </div>
+                <div class="col-md-4 ">
+                     {{ form_row(form.lieuNaissance)}}
+                </div>
+                <div class="col-md-4">
+                      {{ form_row(form.profession)}}
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    {{ form_row(form.domicile) }}
+                </div>
+                <div class="col-md-4">
+                    {{ form_row(form.pere) }}
+                </div>
+                <div class="col-md-4">
+                    {{ form_row(form.mere) }}
+                </div>
+            </div>
+            <div class="row">
+               
+                <div class="col-md-6">
+                    {{ form_row(form.adresse) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.telDomicile) }}
+                </div>
+
+            </div>
+
+            <div class="row moral_sub">
+
+                <div class="col-md-6">
+                    {{ form_row(form.telBureau) }}
+                </div>
+                <div class="col-md-6">
+                     {{ form_row(form.telPortable) }}
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    {{ form_row(form.email) }}
+                </div>
+
+                <div class="col-md-4">
+                     {{ form_row(form.nationalite) }}
+                </div>
+                <div class="col-md-4">
+                    {{ form_row(form.situation) }}
+                </div>
+            </div>
+            <div class="">
+                <div class="row situation" >
+
+                    <div class="col-md-6">
+                        {{ form_row(form.nomConjoint) }}
+                    </div>
+
+                    <div class="col-md-6">
+                       {{ form_row(form.prenomConjoint) }}
+                    </div>
+                </div>
+                <div class="row situation">
+
+                    <div class="col-md-6">
+                        {{ form_row(form.dateNaissanceConjoint) }}
+
+                    </div>
+
+                    <div class="col-md-6">
+                        {{ form_row(form.lieuNaissanceConjoint) }}
+                    </div>
+                </div>
+                <div class="row situation">
+
+                    <div class="col-md-4">
+                         {{ form_row(form.professionConjoint) }}
+                    </div>
+
+                    <div class="col-md-4">
+                        {{ form_row(form.pereConjoint) }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form_row(form.mereConjoint) }}
+                    </div>
+                </div>
+                <div class="row situation">
+
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.adresseConjoint) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.telConjoint) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.portableConjoint) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                </div>
+                <div class="row situation">
+
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.emailConjoint) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.nationaliteConjoint) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.regimeMatrimonialConjoint) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                </div>
+                <div class="row situation">
+
+                    <div class="col-md-6">
+                        
+                        {{ form_row(form.dateMariage) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                    <div class="col-md-6">
+                        
+                        {{ form_row(form.lieuMariageConjoint) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                </div>
+                <div class="row situation ">
+
+                    <div class="form-group col-md-6">
+                        
+                        {{ form_row(form.contratMariageConjoint) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                    <div class="col-md-6 affirmatif">
+                        
+                        {{ form_row(form.affirmatif) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                </div>
+
+                <div class="row precedent-mariage">
+
+                    <div class="col-md-6">
+                        
+                        {{ form_row(form.precedentMariage) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="col-md-6etat">
+                        
+                        {{ form_row(form.etat) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                </div>
+
+                <div class="row precedent-mariage-oblige">
+                    <div class="col-md-4 nomPrenomEpoux">
+                        
+                        {{ form_row(form.nomPrenomEpoux) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="col-md-4 datePrecedent">
+                        
+                        {{ form_row(form.datePrecedent) }}
+
+                    </div>
+                    <div class="col-md-4 regime">
+                        
+                        {{ form_row(form.regime) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                </div>
+
+                <div class="row divorce situation">
+
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.numeroJugement) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.dateJugement) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.jugementRendu) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                </div>
+                <div class="row deces situation">
+
+                    <div class="col-md-6">
+                        
+                        {{ form_row(form.dateDeces) }}
+                        {# <input type="text" id="userinput1" class="fodateDecesrm-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                    <div class="col-md-6">
+                        
+                        {{ form_row(form.lieuDeces) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+            <div class="moral">
+                <div class="row">
+                    <div class="col-md-6">
+                        
+                        {{ form_row(form.raisonSocial) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="col-md-6">
+                        
+                        {{ form_row(form.registreCommercial) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.boitePostal) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.siteWeb) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+                    <div class="col-md-4">
+                        
+                        {{ form_row(form.emailEntreprise) }}
+                        {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="fcol-md-12">
+                        {{ form_row(form.local) }}
+                    </div>
+
+
+                </div>
+                
+            </div>
+            <div class="row">
+                    <div class="col-md-12">
+                         <button type="button" data-origine="1" class="add-document btn btn-sm btn-info" data-container=".doc-container">Ajouter un document</button>
+                         <div class="doc-container">
+                             {% for document in form.documents %}
+                                {{ list_document(document) }}
+                            {% endfor %}
+                         </div>
+                    </div>
+                </div>
+
+        </div>
+        
+
+        <div class="card-footer text-end">
+            <a href="{{ path('client') }}" class="btn btn-danger my-1">Retourner à la liste des clients</a>
+            <button type="submit" class="btn btn-success btn-ajax">Valider</button>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+
+
+{% endblock %}
+   {% block javascripts %}
+      
+       <script>
+            $(function () {
+                const $container = $('.doc-container');
+                var index = $container.find('.row-line').length;
+
+            const $addLink = $('.add-document');
+            $addLink.click(function(e) {
+               
+                addLine($container);
+
+               
+            
+                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+            });
+            // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+            /*if (index == 0) {
+            addimputation($container);
+            } else {*/
+            if (index > 0) {
+                $container.children('.row-line').each(function(_index, el) {
+                    const $this = $(this);
+            
+                    addDeleteLink($this);
+                    $this.find("select").each(function() {
+                        const $this = $(this);
+                        //init_select2($this, null); 
+                    });
+
+                    $this.find('.row-hash').val('hash_' + _index);
+                    $container.addClass('hash_' + _index);
+                });
+            }
+
+
+            // La fonction qui ajoute un formulaire Categorie
+            function addLine($container) {
+                // Dans le contenu de l'attribut « data-prototype », on remplace :
+                // - le texte "__name__label__" qu'il contient par le label du champ
+                // - le texte "__name__" qu'il contient par le numéro du champ
+                var $prototype = $($("#list-document").attr('data-prototype').replace(/__name__label__/g, 'Pièce ' + (index + 1)).replace(/__name__/g, index));
+                // On ajoute au prototype un lien pour pouvoir supprimer la prestation
+                addDeleteLink($prototype);
+                // On ajoute le prototype modifié à la fin de la balise <div>
+                $container.append($prototype);
+               
+                $prototype.find("select").each(function() {
+                   const $this = $(this);
+                   //init_select2($this, null); 
+                });
+                const current_index = $prototype.index();
+                $prototype.find('.row-hash').val('hash_' + current_index);
+                $prototype.addClass('hash_' + current_index);
+                
+                index++;
+            }
+
+
+            function addDeleteLink($prototype) {
+                // Création du lien
+                $deleteLink = $('<a href="#" class="btn btn-danger"><span class="fa fa-trash"></span></a>');
+                // Ajout du lien
+                $prototype.find(".del-col").append($deleteLink);
+                // Ajout du listener sur le clic du lien
+                $deleteLink.click(function(e) {
+                    const $parent = $(this).closest('.row-line');
+                    $parent.remove();
+                    if (index > 0) {
+                        index -= 1;
+                    }
+                    e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                });
+            }
+            });
+           $(function() {
+
+
+             $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+               $('#client_nom ').keyup(function() {
+                   this.value = this.value.toLocaleUpperCase();
+               });
+               $('#client_raisonSocial ').keyup(function() {
+                   this.value = this.value.toLocaleUpperCase();
+               });
+           });
+
+           function enMajuscule(str)
+           {
+               return str.split(/\s+/).map(s => s.charAt(0).toUpperCase() + s.substring(1).toLowerCase()).join(" ");
+           }
+
+           $('#client_prenom').on('keyup', function(event) {
+               var $prenom = $(this);
+               $prenom.val(enMajuscule($prenom.val()));
+           });
+
+           $(document).ready(function () {
+               $('.bt').on('click',function () {
+                   $.ajax({
+                       url: '/client/new',
+                       type: 'get',
+                       dataType: 'json',
+                       success: function (response, status) {
+
+                           console.log(response);
+                       },
+                       error: function (error) {
+                           console.log(error);
+                       }
+                   });
+               })
+               /*select = document.getElementById('client_type_client');
+               choice = select.selectedIndex  // Récupération de l'index du <option> choisi
+
+               const valeur = select.options[choice].text;
+               
+
+               if(valeur !== "Particulier"){
+
+                   $('.moral_sub').show()
+                   $('.moral').show()
+                   $('.physique').hide()
+               }else {
+                   $('.moral').hide()
+                   $('.physique').show()
+               }*/
+               $('.moral').hide()
+               $('#{{ form.type_client.vars.id }}').on('change',function () {
+                   const code = $(this).find('option:selected').attr('data-code');
+                   if (code != 'P') {
+                       $('.moral').show()
+                       $('.moral_sub').show()
+                       $('.physique').hide()
+                   }else {
+                       $('.moral').hide()
+                       $('.physique').show()
+                   }
+               }).trigger('change');
+
+               const value = $('#clien_situation').val();
+               const precedent = $('#client_precedentMariage').val();
+               $('.etat').hide();
+               $('.precedent-mariage-oblige').hide();
+               console.log(precedent)
+               if (precedent === "NON"){
+
+                   $('.precedent-mariage-oblige').hide();
+                   /* $('.deces').hide();
+                    $('.divorce').hide();*/
+                   $('#client_etat').hide();
+               }
+               if (precedent === "OUI"){
+                   $('.precedent-mariage-oblige').show();
+                   $('.etat').show();
+
+
+                   /*$('.datePrecedent').show();
+                   $('.regime').show();*/
+               }
+               if (value !== "CELIBATAIRE"){
+                   //  $('.precedent-mariage').hide()
+
+                   if (value === "VEUF"){
+                       $('.deces').show();
+
+                   }else{
+                       $('.deces').hide();
+                   }
+
+                   if (value === "DIVORCE"){
+                       $('.divorce').show();
+
+                   }else{
+                       $('.divorce').hide();
+                   }
+
+                   $('.situation').show();
+               }else{
+                   $("#client_precedentMariage").show()
+                   $('.situation').hide();
+               }
+
+               $('.situation').hide();
+
+               $("#client_precedentMariage").on('change',function (e) {
+                   var precedent = $(this).val();
+                   console.log(precedent)
+                   if (precedent === "NON"){
+
+                       $('.precedent-mariage-oblige').hide();
+                       $('.deces').hide();
+                       $('.divorce').hide();
+                       $('.etat').hide();
+                   }else {
+                       $('.precedent-mariage-oblige').show();
+                       $('.etat').show();
+
+                       $('.divorce').show();
+                       /*$('.datePrecedent').show();
+                       $('.regime').show();*/
+                   }
+               })
+
+               $("#client_etat").on('change',function (e) {
+                   var precedent = $(this).val();
+                   console.log(precedent)
+                   if (precedent === "DIVORCE"){
+
+
+                       $('.deces').hide();
+                       $('.divorce').show();
+
+                   }else {
+
+                       $('.deces').show();
+                       $('.divorce').hide();
+
+                       /*$('.datePrecedent').show();
+                       $('.regime').show();*/
+                   }
+               })
+
+
+               $("#client_contratMariageConjoint").on('change',function (e) {
+                   var precedent = $(this).val();
+                   console.log(precedent)
+                   if (precedent === "NON"){
+
+                       $('.affirmatif').hide();
+
+                   }else {
+                       $('.affirmatif').show();
+
+                   }
+               })
+               $('#client_situation').on('change',function (e) {
+                   var value = $(this).val();
+                   console.log(value)
+
+
+                   if (value !== "CELIBATAIRE"){
+                       //  $('.precedent-mariage').hide()
+
+                       if (value === "VEUF"){
+                           $('.deces').show();
+
+                       }else{
+                           $('.deces').hide();
+                       }
+
+                       if (value === "DIVORCE"){
+                           $('.divorce').show();
+
+                       }else{
+                           $('.divorce').hide();
+                       }
+
+                       $('.situation').show();
+                   }else{
+                       $("#client_precedentMariage").show()
+                       $('.situation').hide();
+                   }
+               });
+
+           })
+           // $('select').select2();
+       </script>
+   {% endblock %}

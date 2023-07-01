@@ -1,0 +1,31 @@
+<div id="step-1" class="">
+                                     <span class="col-lg-12 identification" id="identification"
+                                           data-prototype="{{ identifie(form.identifications.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>Identification des clients</h4>
+
+                                {% if identification_nombre < 0 %}
+                                    <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_identification" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter un
+                                        fichier </a>
+                                </div>
+                                {% endif %}
+                                         {% for row in form.identifications %}
+                                             <span class="container col-md-12">
+                                        {{ identifie(row|e) }}
+
+                                    </span>
+                                         {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+    {#  {% if dossier.etape == "Identification du client"%}
+          <div class="row">
+              <div class="col-md-4"><a  class="btn btn-success pd-x-25" id="ident" style=""
+                                        >Finir</a></div>
+              <div class="col-md-8"></div>
+          </div>
+      {% endif %}#}
+</div>

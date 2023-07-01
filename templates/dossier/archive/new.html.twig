@@ -1,0 +1,143 @@
+{% block page_content %}
+    {% form_theme form 'widget/fields-block.html.twig' %}
+    {% from '_admin/macros/dossier.html.twig' import list_document %}
+    {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
+     <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nouvel  Archive</h5>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    
+    
+    <div class="modal-body form-body">
+        <div id="list-document" data-prototype="{{ list_document(form.documents.vars.prototype, 1)|e }}"></div>
+        {{ include('_includes/ajax/response.html.twig') }}
+        <div class="row">
+            <div class="col-md-3">{{ form_row(form.numeroOuverture) }}</div>
+            <div class="col-md-3">{{ form_row(form.dateOuverture) }}</div>
+            <div class="col-md-6">{{ form_row(form.objet) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">{{ form_row(form.description) }}</div>
+        </div>
+         <div class="row">
+            <div class="col-md-6">{{ form_row(form.numeroClassification) }}</div>
+            <div class="col-md-6">{{ form_row(form.dateClassification) }}</div>
+        </div>
+         <div class="row">
+            <div class="col-md-6">{{ form_row(form.acheteur) }}</div>
+            <div class="col-md-6">{{ form_row(form.vendeur) }}</div>
+        </div>
+      
+         <div class="row">
+            <div class="col-md-12">
+                <button type="button" data-origine="1" class="add-document btn btn-sm btn-info" data-container=".doc-container">Ajouter un document</button>
+                <div class="doc-container">
+                    {% for document in form.documents %}
+                        {{ list_document(document) }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {# {{ include('_includes/ajax/loader.html.twig') }} #}
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary btn-ajax">Valider</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+           init_select2(null, null, '.form-body');
+            $('.no-auto').each(function () {
+                    const $this = $(this);
+                    const $id = $('#' + $this.attr('id'));
+                    init_date_picker($id,  'down', (start, e) => {
+                        //$this.val(start.format('DD/MM/YYYY'));
+                    }, null, null, false);
+
+                    $id.on('apply.daterangepicker', function (ev, picker) {
+                        $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                    });
+                });
+        });
+
+        $(function () {
+                const $container = $('.doc-container');
+                var index = $container.find('.row-line').length;
+
+            const $addLink = $('.add-document');
+            $addLink.click(function(e) {
+               
+                addLine($container);
+
+               
+            
+                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+            });
+            // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+            /*if (index == 0) {
+            addimputation($container);
+            } else {*/
+            if (index > 0) {
+                $container.children('.row-line').each(function() {
+                    const $this = $(this);
+                    addDeleteLink($this);
+                    $this.find("select").each(function() {
+                        const $this = $(this);
+                        init_select2($this, null, '.form-body'); 
+                    });
+
+
+                    
+                   
+                });
+            }
+
+
+            // La fonction qui ajoute un formulaire Categorie
+            function addLine($container) {
+                // Dans le contenu de l'attribut « data-prototype », on remplace :
+                // - le texte "__name__label__" qu'il contient par le label du champ
+                // - le texte "__name__" qu'il contient par le numéro du champ
+                var $prototype = $($("#list-document").attr('data-prototype').replace(/__name__label__/g, 'Pièce ' + (index + 1)).replace(/__name__/g, index));
+                // On ajoute au prototype un lien pour pouvoir supprimer la prestation
+                addDeleteLink($prototype);
+                // On ajoute le prototype modifié à la fin de la balise <div>
+                $container.append($prototype);
+               
+                $prototype.find("select").each(function() {
+                   const $this = $(this);
+                   init_select2($this, null, '.form-body'); 
+                });
+                
+                index++;
+            }
+
+
+            function addDeleteLink($prototype) {
+                // Création du lien
+                $deleteLink = $('<a href="#" class="btn btn-danger"><span class="fa fa-trash"></span></a>');
+                // Ajout du lien
+                $prototype.find(".del-col").append($deleteLink);
+                // Ajout du listener sur le clic du lien
+                $deleteLink.click(function(e) {
+                    const $parent = $(this).closest('.row-line');
+                    $parent.remove();
+
+                    
+                    if (index > 0) {
+                        index -= 1;
+                    }
+
+                    e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                });
+            }
+        });
+       
+    </script>
+{% endblock %}

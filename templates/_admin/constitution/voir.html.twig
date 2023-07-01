@@ -1,0 +1,99 @@
+
+{% block page_content %}
+
+    <div class="modal-header bg-secondary-gradient">
+        <h2 class="modal-title" style="margin-top: -15px;color: white">DETAILS-{{ titre | upper  }}</h2>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <br>
+    {% form_theme form 'widget/fields-block.html.twig' %}
+    {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                {{ include('_includes/ajax/response.html.twig') }}
+            </div>
+        </div>
+        <div class="contenu" style="margin-top: -10px">
+
+            <div class="row">
+                <div class="form-group col-md-6 ">
+                    <label class="sr-onl" for="userinput1">Date création</label>
+                    {{ form_widget(form.dateCreation,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Date création','required':'required' }}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+                <div class="form-group col-md-6 ">
+                    <label class="sr-onl" for="userinput1">Numéro ouverture</label>
+                    {{ form_widget(form.numeroOuverture,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Numéro ouverture','required':'required' }}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <label class="sr-onl" for="userinput1">Objet</label>
+                    {{ form_widget(form.objet,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Objet'}}) }}
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <label class="sr-onl" for="userinput1">Description</label>
+                    {{ form_widget(form.description,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Description'}}) }}
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="sr-onl" for="userinput1">Date classification</label>
+                    {{ form_widget(form.dateClassification,{'attr':{'class':'form-control border-primary ','id':'userinput1','placeholder':'Date classification'}}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="sr-onl" for="userinput1">Numéro classification</label>
+                    {{ form_widget(form.numeroClassification,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Numéro classification' }}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+                {#<div class="form-group col-md-6">
+                    <label class="sr-onl" for="userinput1">Type acte</label>
+                    {{ form_widget(form.typeActe,{'attr':{'class':'form-select form-control border-primary','id':'userinput1','placeholder':'Acheteur','required':'required'}}) }}
+                    #}{# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}{#
+                </div>#}
+
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+    </div>
+    {{ form_end(form) }}
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+
+    <script>
+        $('.titre').attr('readonly', true)
+        $(function () {
+            $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

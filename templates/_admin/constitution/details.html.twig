@@ -1,0 +1,306 @@
+{% from '_admin/macros/piece.html.twig' import piece %}
+{% from '_admin/macros/identification.html.twig' import identifie %}
+{% from '_admin/macros/documentSigne.html.twig' import document %}
+{% from '_admin/macros/enregistrement.html.twig' import enregistrement %}
+{% block page_content %}
+
+    <div class="modal-header bg-secondary-gradient">
+        <h2 class="modal-title" style="margin-top: -15px;color: white">SUIVI DOSSIER-{{ titre | upper }}</h2>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <br>
+    {% form_theme form 'widget/fields-block.html.twig' %}
+    {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
+    <div class="modal-body" id="body">
+        <div class="row">
+            <div class="col-md-12">
+                {{ include('_includes/ajax/response.html.twig') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" style="margin-top: -2rem">
+                <div class="card">
+                    {#    <div class="card-header border-bottom-0">
+                            <h3 class="card-title">Form Wizard</h3>
+                        </div>#}
+                    <div class="card-body">
+                        <input type="hidden" id="dossier" value="{{ dossier.id }}">
+                        <input type="hidden" id="libelleEtape" value="{{ dossier.etape }}">
+                        <input type="hidden" id="nbre" value="{{ piece_nombre }}">
+                        <div id="smartwizard-3" class="sw-main sw-theme-dots">
+
+                            <ul>
+                                {% for entete in workflow %}
+                                    <li><a href="#step-{{ entete.nbre }}">{{ entete.libelle }}</a></li>
+                                    {#<li><a href="#step-11">New User</a></li>
+                                    <li><a href="#step-12">End</a></li>#}
+                                {% endfor %}
+                            </ul>
+                            <div>
+                                {# {% for entete in workflow %}#}
+                                <div id="step-1" class="">
+                                     <span class="col-lg-12 identification" id="identification"
+                                           data-prototype="{{ identifie(form.identifications.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>Identification des clients</h4>
+                                {% if identification_nombre < 0 %}
+                                    <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_identification" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter un
+                                        fichier </a>
+                                </div>
+                                {% endif %}
+                                         {% for row in form.identifications %}
+                                             <span class="container col-md-12">
+                                        {{ identifie(row|e) }}
+
+                                    </span>
+                                         {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+                                    {% if dossier.etape == "Identification du client"%}
+                                        <div class="row">
+                                            <div class="col-md-4"><a class="btn btn-primary " id="ident" style=""
+                                                >Finir</a></div>
+                                            <div class="col-md-8"></div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div id="step-2" class=" ">
+
+
+
+                                    <h2 class="libelleVide">Veillez s'il vous plaît terminer les/l étape(s) précédente(s)</h2>
+
+                                    <div class="step-22">
+                                        <span class="col-lg-12 groupe" id="groupe"
+                                              data-prototype="{{ piece(form.pieces.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>LISTE DES PIECES </h4>
+                                <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_groupe" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter une
+                                        pièce </a>
+                                </div>
+                                {% for row in form.pieces %}
+                                    <span class="container col-md-12">
+                                        {{ piece(row|e) }}
+
+                                    </span>
+                                {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+
+                                        {# {% if piece_nombre == 2 and dossier.etape == "Recueil des pièces"%}#}
+                                        <div class="row">
+                                            <div class="col-md-4"><a class="btn btn-primary " style="" id="piece_valider"
+                                                >Finir</a></div>
+                                            <div class="col-md-8"></div>
+                                        </div>
+                                        {#{% endif %}#}
+                                    </div>
+
+                                </div>
+                                {# {% endfor %}#}
+
+                                <div id="step-3"
+                                     class="" >
+
+                                    <h2 class="libelleVide2">Veillez s'il vous plaît terminer les/l étape(s) précédente(s)</h2>
+
+                                    <div  class="step-33" >
+                                         <span class="col-lg-12 document" id="document"
+                                               data-prototype="{{ document(form.documentSignes.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>Document signés</h4>
+                                <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_document" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter une
+                                        document </a>
+                                </div>
+                                {% for row in form.documentSignes %}
+                                    <span class="container col-md-12">
+                                        {{ document(row|e) }}
+
+                                    </span>
+                                {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+
+                                        {# {% if document_nombre > 0 and dossier.etape == "Signature"%}#}
+                                        <div class="row" {% if dossier.etape == "Enregistrement" %} style="display: none" {% endif %}>
+                                            <div class="col-md-4"><a class="btn btn-primary " style="" id="signer"
+                                                >Finir</a></div>
+                                            <div class="col-md-8"></div>
+                                        </div>
+                                        {# {% endif %}#}
+                                    </div>
+                                </div>
+                                <div id="step-4"
+                                     class="" >
+
+                                    <h2 class="libelleVide3">Veillez s'il vous plaît terminer les/l étape(s) précédente(s)</h2>
+
+                                    <div  class="step-44" >
+                                         <span class="col-lg-12 enregistrement" id="enregistrement"
+                                               data-prototype="{{ enregistrement(form.enregistrements.vars.prototype)|e('html_attr') }}">
+
+                                  <h4>Enregistrements</h4>
+                                <div class="col-md-12">
+                                    <a href="#" class="btn btn-secondary add_enregistrement" style="margin-left: -20px"
+                                       data-card-tool="remove"
+                                       data-toggle="tooltip" data-placement="top" title=""
+                                       data-original-title="Remove Card">Ajouter une
+                                        document </a>
+                                </div>
+                                {% for row in form.enregistrements %}
+                                    <span class="container col-md-12">
+                                        {{ enregistrement(row|e) }}
+
+                                    </span>
+                                {% endfor %}
+                     <input class="after" type="hidden"/>
+                            </span>
+
+                                        {# {% if document_nombre > 0 and dossier.etape == "Signature"%}#}
+                                        <div class="row" {% if dossier.etape == "Retrait titre de propriété" %} style="display: none" {% endif %}>
+                                            <div class="col-md-4"><a class="btn btn-primary " style="" id="enr"
+                                                >Finir</a></div>
+                                            <div class="col-md-8"></div>
+                                        </div>
+                                        {# {% endif %}#}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contenu" style="margin-top: -10px">
+
+            <div class="row">
+                <div class="form-group col-md-6 ">
+                    <label class="sr-onl" for="userinput1">Date création</label>
+                    {{ form_widget(form.dateCreation,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Date création','required':'required' }}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+                <div class="form-group col-md-6 ">
+                    <label class="sr-onl" for="userinput1">Numéro ouverture</label>
+                    {{ form_widget(form.numeroOuverture,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Numéro ouverture','required':'required' }}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <label class="sr-onl" for="userinput1">Objet</label>
+                    {{ form_widget(form.objet,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Objet'}}) }}
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <label class="sr-onl" for="userinput1">Description</label>
+                    {{ form_widget(form.description,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Objet'}}) }}
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="sr-onl" for="userinput1">Date classification</label>
+                    {{ form_widget(form.dateClassification,{'attr':{'class':'form-control border-primary ','id':'userinput1','placeholder':'Date classification'}}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="sr-onl" for="userinput1">Numéro classification</label>
+                    {{ form_widget(form.numeroClassification,{'attr':{'class':'form-control border-primary','id':'userinput1','placeholder':'Numéro classification' }}) }}
+                    {# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}
+                </div>
+                {#<div class="form-group col-md-6">
+                    <label class="sr-onl" for="userinput1">Type acte</label>
+                    {{ form_widget(form.typeActe,{'attr':{'class':'form-select form-control border-primary','id':'userinput1','placeholder':'Acheteur','required':'required'}}) }}
+                    #}{# <input type="text" id="userinput1" class="form-control border-primary" placeholder="Compte contribuable" name="name">#}{#
+                </div>#}
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn btn-primary btn-ajax">Valider</button>
+    </div>
+    {{ form_end(form) }}
+
+
+{% endblock %}
+{#{% include 'admin/macros/fichier.html.twig'  %}#}
+{% block javascripts %}
+
+    <script src="{{ asset('admin/admin/js/jquery3.1.js') }}"></script>
+    <script src="{{ asset('admin/admin/js/piece.js') }}"></script>
+    <script src="{{ asset('admin/admin/js/identification.js') }}"></script>
+    <script src="{{ asset('admin/admin/js/ident.js') }}"></script>
+    <script src="{{ asset('admin/admin/js/document.js') }}"></script>
+    <script src="{{ asset('admin/admin/js/enregistrement.js') }}"></script>
+
+    <!-- INTERNAL File-Uploads Js-->
+    <script src="{{ asset('admin/assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+    <script src="{{ asset('admin/assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+    <script src="{{ asset('admin/assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+    <script src="{{ asset('admin/assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+    <script src="{{ asset('admin/assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+    <!-- FILE UPLOADES JS -->
+    <script src="{{ asset('admin/assets/plugins/fileuploads/js/fileupload.js') }}"></script>
+    <script src="{{ asset('admin/assets/plugins/fileuploads/js/file-upload.js') }}"></script>
+
+    <!-- FORM WIZARD JS-->
+    <script src="{{ asset('admin/assets/plugins/formwizard/jquery.smartWizard.js') }}"></script>
+    <script src="{{ asset('admin/assets/plugins/formwizard/fromwizard.js') }}"></script>
+
+    <!-- INTERNAl Jquery.steps js -->
+    <script src="{{ asset('admin/assets/plugins/jquery-steps/jquery.steps.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/plugins/parsleyjs/parsley.min.js') }}"></script>
+
+    <script src="{{ asset('admin/assets/plugins/accordion-Wizard-Form/jquery.accordion-wizard.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/form-wizard.js') }}"></script>
+    <script src="{{ asset('admin/admin/js/validation.js') }}"></script>
+    <script src="{{ asset('admin/admin/js/details.js') }}"></script>
+    <script>
+        $('.contenu').hide()
+        $('.vendeur').hide()
+        document.getElementById("userinput1").innerHTML="Client";
+
+        $(function () {
+            $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+        });
+    </script>
+
+{% endblock %}
+

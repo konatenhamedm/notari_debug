@@ -1,0 +1,50 @@
+{% block page_content %}
+
+{% form_theme form 'widget/fields-block.html.twig' %}
+
+{% from '_admin/macros/acte_vente.html.twig' import remise_acte %}
+ <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body form-card">
+                {{ form_start(form, {'attr': {'role':'form', 'class': 'form', 'id': route_without_prefix}}) }}
+                    {{ include('_includes/ajax/response.html.twig') }}
+                     <h3 style="color: orangered">{{ current.libelleEtape }}</h3>
+                    {% for remise_acte in form.remiseActes %}
+                        {{ remise_acte(remise_acte)}}
+                    {% endfor %}
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="text-right">
+                                {{ form_widget(form.save) }}
+                                {% if form.next is defined %}
+                                {{ form_widget(form.next) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(function () {
+            init_select2(null, null, '.form-card');
+        });
+        
+          $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+    </script>
+{% endblock %}
